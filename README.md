@@ -1,6 +1,12 @@
 # Project Task Manager
 ### Capstone | Team 6'7" - CSIT227
 
+## MEMBERS:
+- Miscreola, Hertz Lenin
+- Ondon, Veneerick Joel
+- Dy, Rykiel Von David
+- Dolores, Mike Juneil
+- Gidayawan, Jerry
 
 ## Features
 The order of what's inside our window.
