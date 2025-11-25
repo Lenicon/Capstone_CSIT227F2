@@ -11,11 +11,11 @@ public class Main extends JFrame{
 
         setContentPane(mainPane);
         setTitle("Project Task Manager");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-//        setSize(600, 400);
+        setLocationRelativeTo(null);
         setMinimumSize(getSize());
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
