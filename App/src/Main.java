@@ -1,8 +1,11 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 public class Main extends JFrame{
     private JPanel mainPane;
+    private JLabel ProjectTracker;
+    private JProgressBar progressBar1;
+    private JButton button1;
+    private JTree tree1;
 
     public Main() {
 
