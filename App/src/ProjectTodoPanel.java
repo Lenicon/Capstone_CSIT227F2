@@ -58,8 +58,10 @@ class ProjectTodoPanel extends JPanel {
         JPanel row = new JPanel(new GridLayout(1,4));
         row.setPreferredSize(new Dimension(800, 30));
         row.add(wrapLabel("Task"));
+        row.add(wrapLabel(""));
         row.add(wrapLabel("Difficulty"));
-        row.add(wrapLabel("Deadline"));
+        row.add(wrapLabel("                            Deadline"));
+        row.add(wrapLabel(""));
         row.add(wrapLabel("Actions"));
         row.setBorder(BorderFactory.createMatteBorder(0,0,2,0,Color.DARK_GRAY));
         return row;
@@ -72,7 +74,7 @@ class ProjectTodoPanel extends JPanel {
     }
 
     private JPanel createTaskRow(Task t) {
-        JPanel row = new JPanel(new GridLayout(1,4,4,4));
+        JPanel row = new JPanel(new GridLayout(1,6,4,4));
         row.setBorder(new EmptyBorder(6,6,6,6));
 
         JLabel name = new JLabel(t.name);
