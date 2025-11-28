@@ -170,7 +170,7 @@ class ProjectTodoPanel extends JPanel {
     }
 
     private void openEditTaskDialog(Task t) {
-        JTextField nameField = new JTextField(t.name,18);
+        JTextField nameField = new JTextField(t.getName(),18);
         JDateChooser deadlineChooser = new JDateChooser();
         deadlineChooser.setDate(t.getDeadline());
         deadlineChooser.setDateFormatString("MM/dd/yyyy");
