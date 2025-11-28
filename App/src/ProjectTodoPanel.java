@@ -55,7 +55,8 @@ class ProjectTodoPanel extends JPanel {
 
     /* ---------- UI builders ---------- */
     private JPanel createHeaderRow() {
-        JPanel row = new JPanel(new GridLayout(1,4));
+        JPanel row = new JPanel(new GridLayout(1,4,4,4));
+        row.setBorder(new EmptyBorder(6,6,6,6));
         row.setPreferredSize(new Dimension(800, 30));
         row.add(wrapLabel("Task"));
         row.add(wrapLabel(""));
@@ -77,14 +78,17 @@ class ProjectTodoPanel extends JPanel {
         JPanel row = new JPanel(new GridLayout(1,6,4,4));
         row.setBorder(new EmptyBorder(6,6,6,6));
 
-        JLabel name = new JLabel(t.name);
-        name.setToolTipText(t.name);
+        JLabel name = new JLabel(t.getName());
+        name.setToolTipText(t.getName());
+        name.setVerticalAlignment(SwingConstants.TOP);
 
-        JLabel diff = new JLabel(stars(t.difficulty));
+        JLabel diff = new JLabel(t.stars());
         diff.setHorizontalAlignment(SwingConstants.CENTER);
+        diff.setVerticalAlignment(1);
 
-        JLabel dl = new JLabel(t.deadline == null ? "No deadline" : DATE_FMT.format(t.deadline));
+        JLabel dl = new JLabel(t.getDeadlineString());
         dl.setHorizontalAlignment(SwingConstants.CENTER);
+        dl.setVerticalAlignment(SwingConstants.TOP);
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 2));
         JButton finish = new JButton("Finish");
@@ -92,14 +96,14 @@ class ProjectTodoPanel extends JPanel {
         JButton remove = new JButton("Remove");
 
         finish.addActionListener(e -> {
-            t.completed = true;
+            t.setCompleted(true);
             refreshTasks();
         });
 
         edit.addActionListener(e -> openEditTaskDialog(t));
 
         remove.addActionListener(e -> {
-            int ok = JOptionPane.showConfirmDialog(this, "Delete task \""+t.name+"\"?","Confirm",JOptionPane.YES_NO_OPTION);
+            int ok = JOptionPane.showConfirmDialog(this, "Delete task \""+t.getName()+"\"?","Confirm",JOptionPane.YES_NO_OPTION);
             if (ok == JOptionPane.YES_OPTION) {
                 currentProject.tasks.remove(t);
                 refreshTasks();
@@ -109,7 +113,7 @@ class ProjectTodoPanel extends JPanel {
         actions.add(finish);
         actions.add(edit);
         actions.add(remove);
-
+        actions.setAlignmentY((float)0.0);
         row.add(name);
         row.add(diff);
         row.add(dl);
@@ -122,9 +126,9 @@ class ProjectTodoPanel extends JPanel {
     private JPanel wrapFixedHeight(JPanel content) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.add(content, BorderLayout.CENTER);
-        wrapper.setPreferredSize(new Dimension(800, 48));
-        wrapper.setMinimumSize(new Dimension(800, 48));
-        wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 48));
+        wrapper.setPreferredSize(new Dimension(800, 68));
+        wrapper.setMinimumSize(new Dimension(800, 68));
+        wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 68));
         return wrapper;
     }
 
@@ -168,7 +172,7 @@ class ProjectTodoPanel extends JPanel {
     private void openEditTaskDialog(Task t) {
         JTextField nameField = new JTextField(t.name,18);
         JDateChooser deadlineChooser = new JDateChooser();
-        deadlineChooser.setDate(t.deadline);
+        deadlineChooser.setDate(t.getDeadline());
         deadlineChooser.setDateFormatString("MM/dd/yyyy");
 
         JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
@@ -177,7 +181,7 @@ class ProjectTodoPanel extends JPanel {
         noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
 
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
-        difficultyBox.setSelectedItem(t.difficulty);
+        difficultyBox.setSelectedItem(t.getDifficulty());
 
         JPanel panel = new JPanel(new GridLayout(3,2,8,8));
         panel.add(new JLabel("Task name:")); panel.add(nameField);
@@ -199,9 +203,9 @@ class ProjectTodoPanel extends JPanel {
 
         if (name.isEmpty()) { JOptionPane.showMessageDialog(this, "Task name cannot be empty."); return; }
 
-        t.name = name;
-        t.deadline = deadline;
-        t.difficulty = diff;
+        t.setName(name);
+        t.setDifficulty(diff);
+        t.setDeadline(deadline);
         refreshTasks();
     }
 
@@ -218,29 +222,25 @@ class ProjectTodoPanel extends JPanel {
 
         // sorting
         switch (sortMode.getSelectedIndex()) {
-            case 1 -> currentProject.tasks.sort(Comparator.comparing(task -> task.deadline, Comparator.nullsLast(Comparator.naturalOrder())));
-            case 2 -> currentProject.tasks.sort(Comparator.comparingInt(task -> task.difficulty));
-            default -> currentProject.tasks.sort(Comparator.comparing(task -> task.name.toLowerCase()));
+            case 1 -> currentProject.tasks.sort(Comparator.comparing(task -> task.getDeadline(), Comparator.nullsLast(Comparator.naturalOrder())));
+            case 2 -> currentProject.tasks.sort(Comparator.comparingInt(task -> task.getDifficulty()));
+            default -> currentProject.tasks.sort(Comparator.comparing(task -> task.getName().toLowerCase()));
         }
 
         // add rows
-        int completed = 0;
+        int completedTasks = 0;
         for (Task t : currentProject.tasks) {
             JPanel row = createTaskRow(t);
             taskListPanel.add(wrapFixedHeight(row));
-            if (t.completed) completed++;
+            if (t.isCompleted()) completedTasks++;
         }
 
-        int total = currentProject.tasks.size();
-        int pct = total == 0 ? 0 : (int)((completed / (double) total) * 100);
+        int totalTasks = currentProject.tasks.size();
+        int pct = totalTasks == 0 ? 0 : (int)((completedTasks / (double) totalTasks) * 100);
         progressBar.setValue(pct);
         progressBar.setString(pct + "% completed");
 
         revalidate(); repaint();
     }
 
-    private static String stars(int n) {
-        n = Math.max(0, Math.min(3, n));
-        return "★".repeat(n) + "☆".repeat(3-n);
-    }
 }
