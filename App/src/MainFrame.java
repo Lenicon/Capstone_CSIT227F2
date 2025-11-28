@@ -10,7 +10,7 @@ class MainFrame extends JFrame {
     MainFrame() {
         super("College Productivity App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 700);
+        setSize(1300, 700);
         setLayout(new BorderLayout());
 
         // Left: Projects list (shared)
@@ -18,6 +18,13 @@ class MainFrame extends JFrame {
 
         // Center: card panel switching between "Projects" view and others
         JTabbedPane tabs = new JTabbedPane();
+
+        //Test Samples------------------------------
+        Project sample = new Project("Test");
+        sample.tasks.add(new Task("Buy groceries", 1, ProjectTodoPanel.DATE_FMT.parseQuiet("01/30/2026")));
+        sample.tasks.add(new Task("Finish homework", 2, ProjectTodoPanel.DATE_FMT.parseQuiet("01/31/2026")));
+        projectListPanel.addProject(sample);
+//        //------------------------------------------
 
         projectTodoPanel = new ProjectTodoPanel();
         pomodoroPanel = new PomodoroPanel();
@@ -29,12 +36,6 @@ class MainFrame extends JFrame {
 
         add(tabs, BorderLayout.CENTER);
 
-        // Create a sample project to start
-        Project sample = new Project("Default Project");
-        sample.tasks.add(new Task("Buy groceries", 1, ProjectTodoPanel.DATE_FMT.parseQuiet("01/30/2026")));
-        sample.tasks.add(new Task("Finish homework", 2, ProjectTodoPanel.DATE_FMT.parseQuiet("01/31/2026")));
-        projectListPanel.addProject(sample);
-        projectListPanel.selectProject(sample);
 
         setLocationRelativeTo(null);
         setVisible(true);
