@@ -3,6 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.Date;
+import com.toedter.calendar.JDateChooser;
 
 class ProjectTodoPanel extends JPanel {
     static final SafeDateFormat DATE_FMT = new SafeDateFormat("MM/dd/yyyy");
@@ -13,6 +14,7 @@ class ProjectTodoPanel extends JPanel {
     private final JProgressBar progressBar = new JProgressBar();
     private final JComboBox<String> sortMode = new JComboBox<>(new String[]{"Sort: Name", "Sort: Deadline", "Sort: Difficulty"});
     private final JButton addTaskButton = new JButton("Add Task");
+
     private final JPanel taskListPanel = new JPanel(); // contains rows, scrollable
 
     ProjectTodoPanel() {
@@ -53,8 +55,7 @@ class ProjectTodoPanel extends JPanel {
 
     /* ---------- UI builders ---------- */
     private JPanel createHeaderRow() {
-        JPanel row = new JPanel(new GridLayout(1,4,4,4));
-        row.setBorder(new EmptyBorder(6,6,6,6));
+        JPanel row = new JPanel(new GridLayout(1,4));
         row.setPreferredSize(new Dimension(800, 30));
         row.add(wrapLabel("Task"));
         row.add(wrapLabel("Difficulty"));
@@ -76,15 +77,12 @@ class ProjectTodoPanel extends JPanel {
 
         JLabel name = new JLabel(t.name);
         name.setToolTipText(t.name);
-        name.setVerticalAlignment(SwingConstants.TOP);
 
         JLabel diff = new JLabel(stars(t.difficulty));
         diff.setHorizontalAlignment(SwingConstants.CENTER);
-        diff.setVerticalAlignment(1);
 
-        JLabel dl = new JLabel(DATE_FMT.format(t.deadline));
+        JLabel dl = new JLabel(t.deadline == null ? "No deadline" : DATE_FMT.format(t.deadline));
         dl.setHorizontalAlignment(SwingConstants.CENTER);
-        dl.setVerticalAlignment(SwingConstants.TOP);
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 2));
         JButton finish = new JButton("Finish");
@@ -109,7 +107,7 @@ class ProjectTodoPanel extends JPanel {
         actions.add(finish);
         actions.add(edit);
         actions.add(remove);
-        actions.setAlignmentY((float)0.0);
+
         row.add(name);
         row.add(diff);
         row.add(dl);
@@ -122,41 +120,44 @@ class ProjectTodoPanel extends JPanel {
     private JPanel wrapFixedHeight(JPanel content) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.add(content, BorderLayout.CENTER);
-        wrapper.setPreferredSize(new Dimension(800, 68));
-        wrapper.setMinimumSize(new Dimension(800, 68));
-        wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 68));
+        wrapper.setPreferredSize(new Dimension(800, 48));
+        wrapper.setMinimumSize(new Dimension(800, 48));
+        wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 48));
         return wrapper;
     }
 
-    //
-
-    //Dialogs
+    /* ---------- Dialogs ---------- */
     private void openAddTaskDialog() {
         if (currentProject == null) { JOptionPane.showMessageDialog(this, "Select a project first."); return; }
 
         JTextField nameField = new JTextField(18);
-        JTextField deadlineField = new JTextField(10);
+        JDateChooser deadlineChooser = new JDateChooser();
+        deadlineChooser.setDateFormatString("MM/dd/yyyy");
+
+        JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
+        noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
+
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
 
         JPanel panel = new JPanel(new GridLayout(3,2,8,8));
-        panel.add(new JLabel("Task name:"));
-        panel.add(nameField);
-        panel.add(new JLabel("Deadline (MM/dd/yyyy):"));
-        panel.add(deadlineField);
-        panel.add(new JLabel("Difficulty (0-3):"));
-        panel.add(difficultyBox);
+        panel.add(new JLabel("Task name:")); panel.add(nameField);
+
+        panel.add(new JLabel("Deadline:"));
+        JPanel deadlinePanel = new JPanel(new BorderLayout());
+        deadlinePanel.add(deadlineChooser, BorderLayout.CENTER);
+        deadlinePanel.add(noDeadlineCheck, BorderLayout.EAST);
+        panel.add(deadlinePanel);
+
+        panel.add(new JLabel("Difficulty (0-3):")); panel.add(difficultyBox);
 
         int res = JOptionPane.showConfirmDialog(this, panel, "Add Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (res != JOptionPane.OK_OPTION) return;
 
         String name = nameField.getText().trim();
-        String dt = deadlineField.getText().trim();
+        Date deadline = noDeadlineCheck.isSelected() ? null : deadlineChooser.getDate();
         int diff = (Integer) difficultyBox.getSelectedItem();
 
         if (name.isEmpty()) { JOptionPane.showMessageDialog(this, "Task name cannot be empty."); return; }
-        Date deadline;
-        try { deadline = DATE_FMT.parse(dt); }
-        catch (Exception ex) { JOptionPane.showMessageDialog(this, "Invalid date. Use MM/dd/yyyy."); return; }
 
         currentProject.tasks.add(new Task(name, diff, deadline));
         refreshTasks();
@@ -164,31 +165,45 @@ class ProjectTodoPanel extends JPanel {
 
     private void openEditTaskDialog(Task t) {
         JTextField nameField = new JTextField(t.name,18);
-        JTextField deadlineField = new JTextField(DATE_FMT.format(t.deadline),10);
+        JDateChooser deadlineChooser = new JDateChooser();
+        deadlineChooser.setDate(t.deadline);
+        deadlineChooser.setDateFormatString("MM/dd/yyyy");
+
+        JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
+        noDeadlineCheck.setSelected(t.deadline == null);
+        deadlineChooser.setEnabled(!noDeadlineCheck.isSelected());
+        noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
+
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
         difficultyBox.setSelectedItem(t.difficulty);
 
         JPanel panel = new JPanel(new GridLayout(3,2,8,8));
         panel.add(new JLabel("Task name:")); panel.add(nameField);
-        panel.add(new JLabel("Deadline (MM/dd/yyyy):")); panel.add(deadlineField);
+
+        panel.add(new JLabel("Deadline:"));
+        JPanel deadlinePanel = new JPanel(new BorderLayout());
+        deadlinePanel.add(deadlineChooser, BorderLayout.CENTER);
+        deadlinePanel.add(noDeadlineCheck, BorderLayout.EAST);
+        panel.add(deadlinePanel);
+
         panel.add(new JLabel("Difficulty (0-3):")); panel.add(difficultyBox);
 
         int res = JOptionPane.showConfirmDialog(this, panel, "Edit Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (res != JOptionPane.OK_OPTION) return;
 
         String name = nameField.getText().trim();
-        String dt = deadlineField.getText().trim();
+        Date deadline = noDeadlineCheck.isSelected() ? null : deadlineChooser.getDate();
         int diff = (Integer) difficultyBox.getSelectedItem();
 
         if (name.isEmpty()) { JOptionPane.showMessageDialog(this, "Task name cannot be empty."); return; }
-        Date deadline;
-        try { deadline = DATE_FMT.parse(dt); } catch (Exception ex) { JOptionPane.showMessageDialog(this, "Invalid date."); return; }
 
-        t.name = name; t.deadline = deadline; t.difficulty = diff;
+        t.name = name;
+        t.deadline = deadline;
+        t.difficulty = diff;
         refreshTasks();
     }
 
-    //Refresh & Sorting
+    /* ---------- Refresh & Sorting ---------- */
     private void refreshTasks() {
         taskListPanel.removeAll();
 
@@ -201,7 +216,7 @@ class ProjectTodoPanel extends JPanel {
 
         // sorting
         switch (sortMode.getSelectedIndex()) {
-            case 1 -> currentProject.tasks.sort(Comparator.comparing(task -> task.deadline));
+            case 1 -> currentProject.tasks.sort(Comparator.comparing(task -> task.deadline, Comparator.nullsLast(Comparator.naturalOrder())));
             case 2 -> currentProject.tasks.sort(Comparator.comparingInt(task -> task.difficulty));
             default -> currentProject.tasks.sort(Comparator.comparing(task -> task.name.toLowerCase()));
         }
