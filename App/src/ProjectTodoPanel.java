@@ -3,6 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.Date;
+// TODO: ADD DEPENDENCY, WE MIGHT NEED TO LOOK INTO MAVEN
 import com.toedter.calendar.JDateChooser;
 
 class ProjectTodoPanel extends JPanel {
@@ -176,7 +177,7 @@ class ProjectTodoPanel extends JPanel {
         deadlineChooser.setDateFormatString("MM/dd/yyyy");
 
         JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
-        noDeadlineCheck.setSelected(t.deadline == null);
+        noDeadlineCheck.setSelected(t.getDeadline() == null);
         deadlineChooser.setEnabled(!noDeadlineCheck.isSelected());
         noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
 
