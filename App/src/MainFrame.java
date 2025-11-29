@@ -10,7 +10,7 @@ class MainFrame extends JFrame {
     MainFrame() {
         super("College Productivity App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1300, 700);
+        setExtendedState(Frame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
 
         // Left: Projects list (shared)

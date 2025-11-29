@@ -34,7 +34,11 @@ class ProjectTodoPanel extends JPanel {
 
         topContainer.add(progressBar);
         topContainer.add(controls);
-        topContainer.add(createHeaderRow()); // fixed header
+        topContainer.add(createHeaderRow());
+
+//        JScrollPane topscroll = new JScrollPane(createHeaderRow());
+//        topscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        topContainer.add(topscroll); // fixed header
 
         add(topContainer, BorderLayout.NORTH);
 
@@ -56,16 +60,41 @@ class ProjectTodoPanel extends JPanel {
 
     /* ---------- UI builders ---------- */
     private JPanel createHeaderRow() {
-        JPanel row = new JPanel(new GridLayout(1,4,4,4));
+//        JPanel row = new JPanel(new GridLayout(1,4,4,4));
+//        row.setBorder(new EmptyBorder(6,6,6,6));
+//        row.setPreferredSize(new Dimension(800, 30));
+//        row.add(wrapLabel("Task"));
+//        row.add(wrapLabel(""));
+//        row.add(wrapLabel("Difficulty"));
+//        row.add(wrapLabel("Deadline"));
+//        row.add(wrapLabel(""));
+//        row.add(wrapLabel("Actions"));
+//        row.setBorder(BorderFactory.createMatteBorder(0,0,2,0,Color.DARK_GRAY));
+
+        JPanel row = new JPanel(new GridLayout(1,6,4,4));
         row.setBorder(new EmptyBorder(6,6,6,6));
-        row.setPreferredSize(new Dimension(800, 30));
-        row.add(wrapLabel("Task"));
-        row.add(wrapLabel(""));
-        row.add(wrapLabel("Difficulty"));
-        row.add(wrapLabel("                            Deadline"));
-        row.add(wrapLabel(""));
-        row.add(wrapLabel("Actions"));
-        row.setBorder(BorderFactory.createMatteBorder(0,0,2,0,Color.DARK_GRAY));
+
+        JLabel name = new JLabel("Task");
+        name.setToolTipText("Tasks To Do");
+        name.setVerticalAlignment(SwingConstants.TOP);
+
+        JLabel diff = new JLabel("Difficulty");
+        diff.setHorizontalAlignment(SwingConstants.CENTER);
+        diff.setVerticalAlignment(SwingConstants.TOP);
+
+        JLabel dl = new JLabel("Deadline");
+        dl.setHorizontalAlignment(SwingConstants.CENTER);
+        dl.setVerticalAlignment(SwingConstants.TOP);
+
+        JLabel ac = new JLabel("Actions");
+        ac.setHorizontalAlignment(SwingConstants.RIGHT);
+        ac.setVerticalAlignment(SwingConstants.TOP);
+
+        row.add(name);
+        row.add(diff);
+        row.add(dl);
+        row.add(ac);
+
         return row;
     }
 
@@ -80,21 +109,33 @@ class ProjectTodoPanel extends JPanel {
         row.setBorder(new EmptyBorder(6,6,6,6));
 
         JLabel name = new JLabel(t.getName());
+        name.setMaximumSize(new Dimension(1000,0));
+        name.setBorder(new EmptyBorder(20,0,0,0));
+        name.setFont(new Font("Default", Font.PLAIN, 14));
         name.setToolTipText(t.getName());
         name.setVerticalAlignment(SwingConstants.TOP);
 
         JLabel diff = new JLabel(t.stars());
+        diff.setBorder(new EmptyBorder(15,0,0,0));
+        diff.setFont(new Font("Default", Font.PLAIN, 20));
         diff.setHorizontalAlignment(SwingConstants.CENTER);
-        diff.setVerticalAlignment(1);
+        diff.setVerticalAlignment(SwingConstants.TOP);
 
         JLabel dl = new JLabel(t.getDeadlineString());
+        dl.setBorder(new EmptyBorder(20,0,0,0));
+        dl.setFont(new Font("Default", Font.PLAIN, 14));
         dl.setHorizontalAlignment(SwingConstants.CENTER);
         dl.setVerticalAlignment(SwingConstants.TOP);
 
-        JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 2));
-        JButton finish = new JButton("Finish");
-        JButton edit = new JButton("Edit");
-        JButton remove = new JButton("Remove");
+//        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 2));
+        JPanel actions = new JPanel(new GridLayout(1,0,5,0));
+
+        JButton finish = new JButton("✅");
+        finish.setHorizontalAlignment(SwingConstants.CENTER);
+        JButton edit = new JButton("✏️");
+        edit.setHorizontalAlignment(SwingConstants.CENTER);
+        JButton remove = new JButton("🗑️");
+        remove.setHorizontalAlignment(SwingConstants.CENTER);
 
         finish.addActionListener(e -> {
             t.setCompleted(true);
@@ -111,6 +152,8 @@ class ProjectTodoPanel extends JPanel {
             }
         });
 
+
+//        actions.setMinimumSize(new Dimension(500, 50));
         actions.add(finish);
         actions.add(edit);
         actions.add(remove);
