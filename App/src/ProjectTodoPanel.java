@@ -97,11 +97,11 @@ class ProjectTodoPanel extends JPanel {
         return row;
     }
 
-    private JLabel wrapLabel(String text) {
-        JLabel l = new JLabel(text);
-        l.setBorder(new EmptyBorder(4,6,4,6));
-        return l;
-    }
+//    private JLabel wrapLabel(String text) {
+//        JLabel l = new JLabel(text);
+//        l.setBorder(new EmptyBorder(4,6,4,6));
+//        return l;
+//    }
 
     private JPanel createTaskRow(Task t) {
         JPanel row = new JPanel(new GridLayout(1,4,4,4));
