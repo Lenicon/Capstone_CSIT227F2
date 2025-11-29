@@ -75,7 +75,6 @@ class ProjectTodoPanel extends JPanel {
         row.setBorder(new EmptyBorder(6,6,6,6));
 
         JLabel name = new JLabel("Task");
-        name.setToolTipText("Tasks To Do");
         name.setVerticalAlignment(SwingConstants.TOP);
 
         JLabel diff = new JLabel("Difficulty");
@@ -105,7 +104,7 @@ class ProjectTodoPanel extends JPanel {
     }
 
     private JPanel createTaskRow(Task t) {
-        JPanel row = new JPanel(new GridLayout(1,6,4,4));
+        JPanel row = new JPanel(new GridLayout(1,4,4,4));
         row.setBorder(new EmptyBorder(6,6,6,6));
 
         JLabel name = new JLabel(t.getName());

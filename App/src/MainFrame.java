@@ -24,6 +24,7 @@ class MainFrame extends JFrame {
         sample.tasks.add(new Task("Buy groceries", 1, ProjectTodoPanel.DATE_FMT.parseQuiet("01/30/2026")));
         sample.tasks.add(new Task("Finish homework", 2, ProjectTodoPanel.DATE_FMT.parseQuiet("01/31/2026")));
         projectListPanel.addProject(sample);
+
 //        //------------------------------------------
 
         projectTodoPanel = new ProjectTodoPanel();
@@ -36,6 +37,8 @@ class MainFrame extends JFrame {
 
         add(tabs, BorderLayout.CENTER);
 
+        // Automatically select first project if it exists
+        projectListPanel.selectFirstProject();
 
         setLocationRelativeTo(null);
         setVisible(true);

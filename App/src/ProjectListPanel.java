@@ -14,6 +14,7 @@ class ProjectListPanel extends JPanel {
         setPreferredSize(new Dimension(260, 600));
         setBorder(BorderFactory.createTitledBorder("Projects"));
 
+
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
@@ -68,4 +69,9 @@ class ProjectListPanel extends JPanel {
 
     public void addProject(Project p) { model.addElement(p); }
     public void selectProject(Project p) { list.setSelectedValue(p, true); }
+    public void selectFirstProject() {
+        if (list.isSelectionEmpty() && list.getModel().getSize() > 0) {
+            list.setSelectedIndex(0);
+        }
+    }
 }
