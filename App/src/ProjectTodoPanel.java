@@ -16,7 +16,9 @@ class ProjectTodoPanel extends JPanel {
     private final JComboBox<String> sortMode = new JComboBox<>(new String[]{"Sort: Name", "Sort: Deadline", "Sort: Difficulty"});
     private final JButton addTaskButton = new JButton("Add Task");
 
-    private final JPanel taskListPanel = new JPanel(); // contains rows, scrollable
+    private final JPanel unfinishedTaskListPanel = new JPanel();
+    private final JPanel finishedTaskListPanel = new JPanel();
+    private final JTabbedPane tabbedPane = new JTabbedPane(); // contains rows, scrollable
 
     ProjectTodoPanel() {
         setLayout(new BorderLayout());
@@ -43,10 +45,13 @@ class ProjectTodoPanel extends JPanel {
         add(topContainer, BorderLayout.NORTH);
 
         // Task list in scroll pane
-        taskListPanel.setLayout(new BoxLayout(taskListPanel, BoxLayout.Y_AXIS));
-        JScrollPane scroll = new JScrollPane(taskListPanel);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scroll, BorderLayout.CENTER);
+        unfinishedTaskListPanel.setLayout(new BoxLayout(unfinishedTaskListPanel, BoxLayout.Y_AXIS));
+        finishedTaskListPanel.setLayout(new BoxLayout(finishedTaskListPanel, BoxLayout.Y_AXIS));
+        JScrollPane unfinishedScroll = new JScrollPane(unfinishedTaskListPanel);
+        JScrollPane finishedScroll = new JScrollPane(finishedTaskListPanel);
+        tabbedPane.addTab("Unfinished", unfinishedScroll);
+        tabbedPane.addTab("Finished", finishedScroll);
+        add(tabbedPane, BorderLayout.CENTER);
 
         // handlers
         addTaskButton.addActionListener(_ -> openAddTaskDialog());
@@ -129,7 +134,7 @@ class ProjectTodoPanel extends JPanel {
 //        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 2));
         JPanel actions = new JPanel(new GridLayout(1,0,5,0));
 
-        JButton finish = new JButton("✅");
+        JButton finish = new JButton(t.isCompleted() ? "↩" : "✅");
         finish.setHorizontalAlignment(SwingConstants.CENTER);
         JButton edit = new JButton("✏️");
         edit.setHorizontalAlignment(SwingConstants.CENTER);
@@ -137,9 +142,16 @@ class ProjectTodoPanel extends JPanel {
         remove.setHorizontalAlignment(SwingConstants.CENTER);
 
         finish.addActionListener(_ -> {
-            t.setCompleted(true);
+            boolean newState = !t.isCompleted();
+            t.setCompleted(newState);
             refreshTasks();
+            if(newState){
+                tabbedPane.setSelectedIndex(1);
+            }else{
+                tabbedPane.setSelectedIndex(0);
+            }
         });
+
 
         edit.addActionListener(_ -> openEditTaskDialog(t));
 
@@ -254,7 +266,8 @@ class ProjectTodoPanel extends JPanel {
 
     /* ---------- Refresh & Sorting ---------- */
     private void refreshTasks() {
-        taskListPanel.removeAll();
+        unfinishedTaskListPanel.removeAll();
+        finishedTaskListPanel.removeAll();
 
         if (currentProject == null) {
             progressBar.setValue(0);
@@ -272,10 +285,14 @@ class ProjectTodoPanel extends JPanel {
 
         // add rows
         int completedTasks = 0;
-        for (Task t : currentProject.tasks) {
+        for(Task t : currentProject.tasks){
             JPanel row = createTaskRow(t);
-            taskListPanel.add(wrapFixedHeight(row));
-            if (t.isCompleted()) completedTasks++;
+            if(t.isCompleted()){
+                finishedTaskListPanel.add(wrapFixedHeight(row));
+                completedTasks++;
+            }else{
+                unfinishedTaskListPanel.add(wrapFixedHeight(row));
+            }
         }
 
         int totalTasks = currentProject.tasks.size();
