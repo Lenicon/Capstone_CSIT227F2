@@ -49,8 +49,8 @@ class ProjectTodoPanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
 
         // handlers
-        addTaskButton.addActionListener(e -> openAddTaskDialog());
-        sortMode.addActionListener(e -> refreshTasks());
+        addTaskButton.addActionListener(_ -> openAddTaskDialog());
+        sortMode.addActionListener(_ -> refreshTasks());
     }
 
     public void loadProject(Project p) {
@@ -136,15 +136,15 @@ class ProjectTodoPanel extends JPanel {
         JButton remove = new JButton("🗑️");
         remove.setHorizontalAlignment(SwingConstants.CENTER);
 
-        finish.addActionListener(e -> {
+        finish.addActionListener(_ -> {
             t.setCompleted(true);
             refreshTasks();
         });
 
-        edit.addActionListener(e -> openEditTaskDialog(t));
+        edit.addActionListener(_ -> openEditTaskDialog(t));
 
-        remove.addActionListener(e -> {
-            int ok = JOptionPane.showConfirmDialog(this, "Delete task \""+t.getName()+"\"?","Confirm",JOptionPane.YES_NO_OPTION);
+        remove.addActionListener(_ -> {
+            int ok = JOptionPane.showConfirmDialog(null, "Delete task \""+t.getName()+"\"?","Confirm",JOptionPane.YES_NO_OPTION);
             if (ok == JOptionPane.YES_OPTION) {
                 currentProject.tasks.remove(t);
                 refreshTasks();
@@ -177,14 +177,14 @@ class ProjectTodoPanel extends JPanel {
 
     /* ---------- Dialogs ---------- */
     private void openAddTaskDialog() {
-        if (currentProject == null) { JOptionPane.showMessageDialog(this, "Select a project first."); return; }
+        if (currentProject == null) { JOptionPane.showMessageDialog(null, "Select a project first."); return; }
 
         JTextField nameField = new JTextField(18);
         JDateChooser deadlineChooser = new JDateChooser();
         deadlineChooser.setDateFormatString("MM/dd/yyyy");
 
         JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
-        noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
+        noDeadlineCheck.addActionListener(_ -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
 
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
 
@@ -199,14 +199,14 @@ class ProjectTodoPanel extends JPanel {
 
         panel.add(new JLabel("Difficulty (0-3):")); panel.add(difficultyBox);
 
-        int res = JOptionPane.showConfirmDialog(this, panel, "Add Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int res = JOptionPane.showConfirmDialog(null, panel, "Add Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (res != JOptionPane.OK_OPTION) return;
 
         String name = nameField.getText().trim();
         Date deadline = noDeadlineCheck.isSelected() ? null : deadlineChooser.getDate();
         int diff = (Integer) difficultyBox.getSelectedItem();
 
-        if (name.isEmpty()) { JOptionPane.showMessageDialog(this, "Task name cannot be empty."); return; }
+        if (name.isEmpty()) { JOptionPane.showMessageDialog(null, "Task name cannot be empty."); return; }
 
         currentProject.tasks.add(new Task(name, diff, deadline));
         refreshTasks();
@@ -221,7 +221,7 @@ class ProjectTodoPanel extends JPanel {
         JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
         noDeadlineCheck.setSelected(t.getDeadline() == null);
         deadlineChooser.setEnabled(!noDeadlineCheck.isSelected());
-        noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
+        noDeadlineCheck.addActionListener(_ -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
 
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
         difficultyBox.setSelectedItem(t.getDifficulty());
@@ -237,14 +237,14 @@ class ProjectTodoPanel extends JPanel {
 
         panel.add(new JLabel("Difficulty (0-3):")); panel.add(difficultyBox);
 
-        int res = JOptionPane.showConfirmDialog(this, panel, "Edit Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int res = JOptionPane.showConfirmDialog(null, panel, "Edit Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (res != JOptionPane.OK_OPTION) return;
 
         String name = nameField.getText().trim();
         Date deadline = noDeadlineCheck.isSelected() ? null : deadlineChooser.getDate();
         int diff = (Integer) difficultyBox.getSelectedItem();
 
-        if (name.isEmpty()) { JOptionPane.showMessageDialog(this, "Task name cannot be empty."); return; }
+        if (name.isEmpty()) { JOptionPane.showMessageDialog(null, "Task name cannot be empty."); return; }
 
         t.setName(name);
         t.setDifficulty(diff);
