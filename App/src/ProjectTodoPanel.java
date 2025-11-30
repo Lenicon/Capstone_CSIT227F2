@@ -16,8 +16,11 @@ class ProjectTodoPanel extends JPanel {
     private final JComboBox<String> sortMode = new JComboBox<>(new String[]{"Sort: Name", "Sort: Deadline", "Sort: Difficulty"});
     private final JButton addTaskButton = new JButton("Add Task");
 
+    // Separate containers for Unfinished and Finished tasks
     private final JPanel unfinishedTaskListPanel = new JPanel();
     private final JPanel finishedTaskListPanel = new JPanel();
+
+    //Layout to switch between the two categories
     private final JTabbedPane tabbedPane = new JTabbedPane(); // contains rows, scrollable
 
     ProjectTodoPanel() {
@@ -145,11 +148,6 @@ class ProjectTodoPanel extends JPanel {
             boolean newState = !t.isCompleted();
             t.setCompleted(newState);
             refreshTasks();
-            if(newState){
-                tabbedPane.setSelectedIndex(1);
-            }else{
-                tabbedPane.setSelectedIndex(0);
-            }
         });
 
 
