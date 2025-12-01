@@ -10,6 +10,23 @@ import java.util.Date;
    - Shows remaining time, session count, log of completed sessions
    ===================================================== */
 class PomodoroPanel extends JPanel {
+
+    //MP3 fields
+    private final BGM_Pomodoro player = new BGM_Pomodoro ();
+    private final String[] songs = {
+            "Mondstadt", "Liyue", "Inazuma", "Sumeru", "Fontaine", "Custom..."
+    };
+    private final String[] songFiles = {
+            "App/bgm_music/mondstadt.mp3",
+            "App/bgm_music/liyue.mp3",
+            "App/bgm_music/inazuma.mp3",
+            "App/bgm_music/Sumeru.mp3",
+            "App/bgm_music/fontaine.mp3",
+            "" //
+    };
+    private final JComboBox<String> songSelector = new JComboBox<>(songs);
+    private String currentSongPath = songFiles[0];
+
     private final JTextField workField = new JTextField("25", 3);
     private final JTextField shortBreakField = new JTextField("5", 3);
     private final JTextField longBreakField = new JTextField("15", 3);
@@ -30,6 +47,7 @@ class PomodoroPanel extends JPanel {
     enum PomodoroState { IDLE, WORK, SHORT_BREAK, LONG_BREAK, PAUSED }
 
     PomodoroPanel() {
+
         setLayout(new BorderLayout(8,8));
         setBorder(new EmptyBorder(12,12,12,12));
 
@@ -48,6 +66,10 @@ class PomodoroPanel extends JPanel {
 
         add(controls, BorderLayout.NORTH);
 
+        //MP3 Fields
+        controls.add(new JLabel("Music:"));
+        controls.add(songSelector);
+
         // Center: timer and status
         timerLabel.setFont(new Font("Monospaced", Font.BOLD, 48));
         statusLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -64,9 +86,45 @@ class PomodoroPanel extends JPanel {
         add(right, BorderLayout.EAST);
 
         // Button actions
-        startBtn.addActionListener(e -> startPomodoro());
-        pauseBtn.addActionListener(e -> pausePomodoro());
-        resetBtn.addActionListener(e -> resetPomodoro());
+        startBtn.addActionListener(e -> {
+            startPomodoro();
+            player.play(currentSongPath, true);
+        });
+
+
+        pauseBtn.addActionListener(e -> {
+            pausePomodoro();
+            if (state == PomodoroState.PAUSED) {
+                player.stop();
+            } else if (previousStateBeforePause == PomodoroState.WORK) {
+                player.play(currentSongPath, true);
+            }
+        });
+
+        resetBtn.addActionListener(e -> {
+            resetPomodoro();
+            player.stop();
+        });
+
+        //Song Listener
+        songSelector.addActionListener(e -> {
+            int index = songSelector.getSelectedIndex();
+
+            if (index == songs.length - 1) { // Custom...
+                JFileChooser fileChooser = new JFileChooser();
+                int result = fileChooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    currentSongPath = fileChooser.getSelectedFile().getAbsolutePath();
+                } else {
+                    songSelector.setSelectedIndex(0);
+                    currentSongPath = songFiles[0];
+                }
+            } else {
+                currentSongPath = songFiles[index];
+            }
+        });
+
+
 
         // timer
         swingTimer = new javax.swing.Timer(1000, e -> tick());
