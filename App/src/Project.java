@@ -1,15 +1,17 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
-class Project {
+class Project implements Serializable {
+    private static final long serialVersionUID = 2L;
     String name;
     List<Task> tasks = new ArrayList<>();
-    int id;
+    UUID id;
 
     Project(String name, int id){
         this.name = name;
-        this.id = id;
     }
 
     Project(String name) {
