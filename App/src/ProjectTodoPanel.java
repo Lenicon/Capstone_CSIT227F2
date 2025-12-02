@@ -23,6 +23,19 @@ class ProjectTodoPanel extends JPanel {
     //Layout to switch between the two categories
     private final JTabbedPane tabbedPane = new JTabbedPane(); // contains rows, scrollable
 
+
+    private static ImageIcon loadIcon(String filename, int w, int h) {
+        String path = "App/assets/" + filename;
+        ImageIcon raw = new ImageIcon(path);
+        Image img = raw.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        return new ImageIcon(img);
+    }
+
+    private static final ImageIcon ICON_DONE   = loadIcon("check.png", 20, 20);
+    private static final ImageIcon ICON_UNDO   = loadIcon("undo.png", 20, 20);
+    private static final ImageIcon ICON_EDIT   = loadIcon("pencil.png", 20, 20);
+    private static final ImageIcon ICON_DELETE = loadIcon("trash.png", 20, 20);
+
     ProjectTodoPanel() {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(8,8,8,8));
@@ -137,12 +150,21 @@ class ProjectTodoPanel extends JPanel {
 //        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 2));
         JPanel actions = new JPanel(new GridLayout(1,0,5,0));
 
-        JButton finish = new JButton(t.isCompleted() ? "↩" : "✅");
+        JButton finish = new JButton();
+        finish.setIcon(t.isCompleted() ? ICON_UNDO : ICON_DONE);
         finish.setHorizontalAlignment(SwingConstants.CENTER);
-        JButton edit = new JButton("✏️");
+        JButton edit = new JButton();
+        edit.setIcon(ICON_EDIT);
         edit.setHorizontalAlignment(SwingConstants.CENTER);
-        JButton remove = new JButton("🗑️");
+        JButton remove = new JButton();
+        remove.setIcon(ICON_DELETE);
         remove.setHorizontalAlignment(SwingConstants.CENTER);
+
+        for (JButton b : new JButton[]{finish, edit, remove}) {
+            b.setFocusPainted(false);
+            b.setBorderPainted(false);
+            b.setContentAreaFilled(false);
+        }
 
         finish.addActionListener(_ -> {
             boolean newState = !t.isCompleted();
