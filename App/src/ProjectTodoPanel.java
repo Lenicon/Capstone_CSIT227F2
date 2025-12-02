@@ -70,8 +70,8 @@ class ProjectTodoPanel extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
 
         // handlers
-        addTaskButton.addActionListener(_ -> openAddTaskDialog());
-        sortMode.addActionListener(_ -> refreshTasks());
+        addTaskButton.addActionListener(e -> openAddTaskDialog());
+        sortMode.addActionListener(e -> refreshTasks());
     }
 
     public void loadProject(Project p) {
@@ -169,16 +169,16 @@ class ProjectTodoPanel extends JPanel {
             b.setContentAreaFilled(false);
         }
 
-        finish.addActionListener(_ -> {
+        finish.addActionListener(e -> {
             boolean newState = !t.isCompleted();
             t.setCompleted(newState);
             refreshTasks();
         });
 
 
-        edit.addActionListener(_ -> openEditTaskDialog(t));
+        edit.addActionListener(e -> openEditTaskDialog(t));
 
-        remove.addActionListener(_ -> {
+        remove.addActionListener(e -> {
             int ok = JOptionPane.showConfirmDialog(null, "Delete task \""+t.getName()+"\"?","Confirm",JOptionPane.YES_NO_OPTION);
             if (ok == JOptionPane.YES_OPTION) {
                 currentProject.tasks.remove(t);
@@ -219,7 +219,7 @@ class ProjectTodoPanel extends JPanel {
         deadlineChooser.setDateFormatString("MM/dd/yyyy");
 
         JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
-        noDeadlineCheck.addActionListener(_ -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
+        noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
 
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
 
@@ -256,7 +256,7 @@ class ProjectTodoPanel extends JPanel {
         JCheckBox noDeadlineCheck = new JCheckBox("No deadline");
         noDeadlineCheck.setSelected(t.getDeadline() == null);
         deadlineChooser.setEnabled(!noDeadlineCheck.isSelected());
-        noDeadlineCheck.addActionListener(_ -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
+        noDeadlineCheck.addActionListener(e -> deadlineChooser.setEnabled(!noDeadlineCheck.isSelected()));
 
         JComboBox<Integer> difficultyBox = new JComboBox<>(new Integer[]{0,1,2,3});
         difficultyBox.setSelectedItem(t.getDifficulty());
