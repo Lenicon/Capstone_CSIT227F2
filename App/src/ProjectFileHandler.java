@@ -44,7 +44,7 @@ public class ProjectFileHandler {
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
             out.writeObject(p);
-            System.out.println("Saved project: " + p.getName());
+//            System.out.println("Saved project: " + p.getName());
         } catch (IOException e) {
             System.err.println("Error saving project: " + p.getName());
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class ProjectFileHandler {
 
         if (file.exists()) {
             if (file.delete()) {
-                System.out.println("Deleted file: " + file.getName());
+//                System.out.println("Deleted file: " + file.getName());
             } else {
                 System.err.println("Failed to delete file: " + file.getName());
             }
