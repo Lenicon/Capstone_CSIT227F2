@@ -38,7 +38,7 @@ class ProjectListPanel extends JPanel {
         JButton rename = new JButton("Rename Project");
         JButton remove = new JButton("Remove Project");
 
-        add.addActionListener(_ -> {
+        add.addActionListener(e -> {
             String name = JOptionPane.showInputDialog(null, "Project name:");
             if (name != null && !name.trim().isEmpty()) {
                 Project p = new Project(name.trim());
@@ -47,14 +47,14 @@ class ProjectListPanel extends JPanel {
             }
         });
 
-        rename.addActionListener(_ -> {
+        rename.addActionListener(e -> {
             Project p = list.getSelectedValue();
             if (p == null) { JOptionPane.showMessageDialog(null, "Select a project first."); return; }
             String name = JOptionPane.showInputDialog(null, "New name:", p.name);
             if (name != null && !name.trim().isEmpty()) { p.name = name.trim(); list.repaint(); }
         });
 
-        remove.addActionListener(_ -> {
+        remove.addActionListener(e -> {
             Project p = list.getSelectedValue();
             if (p == null) { JOptionPane.showMessageDialog(null, "Select a project first."); return; }
             int ok = JOptionPane.showConfirmDialog(null, "Remove project \"" + p.name + "\"?","Confirm",JOptionPane.YES_NO_OPTION);
