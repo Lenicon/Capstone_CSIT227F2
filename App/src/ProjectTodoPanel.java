@@ -13,7 +13,7 @@ class ProjectTodoPanel extends JPanel {
 
     // UI pieces
     private final JProgressBar progressBar = new JProgressBar();
-    private final JComboBox<String> sortMode = new JComboBox<>(new String[]{"Sort: Name", "Sort: Deadline", "Sort: Difficulty"});
+    private final JComboBox<String> sortMode = new JComboBox<>(new String[]{"Sort: Deadline", "Sort: Difficulty", "Sort: Name"});
     private final JButton addTaskButton = new JButton("Add Task");
 
     // Separate containers for Unfinished and Finished tasks
@@ -301,9 +301,9 @@ class ProjectTodoPanel extends JPanel {
 
         // sorting
         switch (sortMode.getSelectedIndex()) {
-            case 1 -> currentProject.tasks.sort(Comparator.comparing(task -> task.getDeadline(), Comparator.nullsLast(Comparator.naturalOrder())));
-            case 2 -> currentProject.tasks.sort(Comparator.comparingInt(task -> task.getDifficulty()));
-            default -> currentProject.tasks.sort(Comparator.comparing(task -> task.getName().toLowerCase()));
+            case 1 -> currentProject.tasks.sort(Comparator.comparingInt(task -> task.getDifficulty()));
+            case 2 -> currentProject.tasks.sort(Comparator.comparing(task -> task.getName().toLowerCase()));
+            default -> currentProject.tasks.sort(Comparator.comparing(task -> task.getDeadline(), Comparator.nullsLast(Comparator.naturalOrder())));
         }
 
         // add rows

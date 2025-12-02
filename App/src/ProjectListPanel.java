@@ -20,7 +20,7 @@ class ProjectListPanel extends JPanel {
             @Override
             public Component getListCellRendererComponent(JList<?> lst, Object value, int idx, boolean sel, boolean focus) {
                 super.getListCellRendererComponent(lst, value, idx, sel, focus);
-                if (value instanceof Project p) setText(p.name);
+                if (value instanceof Project p) setText(p.getName());
                 return this;
             }
         });
@@ -50,14 +50,14 @@ class ProjectListPanel extends JPanel {
         rename.addActionListener(e -> {
             Project p = list.getSelectedValue();
             if (p == null) { JOptionPane.showMessageDialog(null, "Select a project first."); return; }
-            String name = JOptionPane.showInputDialog(null, "New name:", p.name);
-            if (name != null && !name.trim().isEmpty()) { p.name = name.trim(); list.repaint(); }
+            String name = JOptionPane.showInputDialog(null, "New name:", p.getName());
+            if (name != null && !name.trim().isEmpty()) { p.setName(name.trim()); list.repaint(); }
         });
 
         remove.addActionListener(e -> {
             Project p = list.getSelectedValue();
             if (p == null) { JOptionPane.showMessageDialog(null, "Select a project first."); return; }
-            int ok = JOptionPane.showConfirmDialog(null, "Remove project \"" + p.name + "\"?","Confirm",JOptionPane.YES_NO_OPTION);
+            int ok = JOptionPane.showConfirmDialog(null, "Remove project \"" + p.getName() + "\"?","Confirm",JOptionPane.YES_NO_OPTION);
             if (ok == JOptionPane.YES_OPTION) { model.removeElement(p); }
         });
 
