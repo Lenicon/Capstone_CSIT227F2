@@ -153,9 +153,12 @@ class ProjectTodoPanel extends JPanel {
         JButton finish = new JButton();
         finish.setIcon(t.isCompleted() ? ICON_UNDO : ICON_DONE);
         finish.setHorizontalAlignment(SwingConstants.CENTER);
+
         JButton edit = new JButton();
         edit.setIcon(ICON_EDIT);
         edit.setHorizontalAlignment(SwingConstants.CENTER);
+
+
         JButton remove = new JButton();
         remove.setIcon(ICON_DELETE);
         remove.setHorizontalAlignment(SwingConstants.CENTER);
@@ -186,7 +189,7 @@ class ProjectTodoPanel extends JPanel {
 
 //        actions.setMinimumSize(new Dimension(500, 50));
         actions.add(finish);
-        actions.add(edit);
+        if (!t.isCompleted()) actions.add(edit);
         actions.add(remove);
         actions.setAlignmentY((float)0.0);
         row.add(name);
