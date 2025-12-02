@@ -18,7 +18,7 @@ class Project implements Serializable {
         this.id = UUID.randomUUID();
     }
 
-    public String fileName() {
+    public String getFileName() {
         return this.id.toString() + ".dat";
     }
 
@@ -29,10 +29,6 @@ class Project implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public Instant getCreationDate() {

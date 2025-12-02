@@ -1,8 +1,11 @@
 import javax.swing.*;
 import java.util.Date;
 import java.util.IllformedLocaleException;
+import java.io.Serializable;
 
-class Task {
+class Task implements Serializable { // <--- THIS IS CRITICAL
+    private static final long serialVersionUID = 4L;
+
     static final SafeDateFormat DATE_FMT = new SafeDateFormat("MM/dd/yyyy");
     private String name;
     private int difficulty; // 0-3
@@ -13,10 +16,6 @@ class Task {
         setName(name);
         setDifficulty(difficulty);
         setDeadline(deadline);
-    }
-
-    Task(String name, Date deadline){
-        this(name, 0, deadline);
     }
 
     public void setDeadline(Date deadline) {
@@ -67,4 +66,5 @@ class Task {
         if (deadline == null) return "No deadline";
         return DATE_FMT.format(deadline);
     }
+
 }

@@ -10,6 +10,7 @@ class ProjectTodoPanel extends JPanel {
     static final SafeDateFormat DATE_FMT = new SafeDateFormat("MM/dd/yyyy");
 
     private Project currentProject = null;
+    private final ProjectFileHandler pm = new ProjectFileHandler();
 
     // UI pieces
     private final JProgressBar progressBar = new JProgressBar();
@@ -172,6 +173,9 @@ class ProjectTodoPanel extends JPanel {
         finish.addActionListener(e -> {
             boolean newState = !t.isCompleted();
             t.setCompleted(newState);
+
+            saveCurrentProject();
+
             refreshTasks();
         });
 
@@ -182,6 +186,7 @@ class ProjectTodoPanel extends JPanel {
             int ok = JOptionPane.showConfirmDialog(null, "Delete task \""+t.getName()+"\"?","Confirm",JOptionPane.YES_NO_OPTION);
             if (ok == JOptionPane.YES_OPTION) {
                 currentProject.tasks.remove(t);
+                saveCurrentProject();
                 refreshTasks();
             }
         });
@@ -244,6 +249,9 @@ class ProjectTodoPanel extends JPanel {
         if (name.isEmpty()) { JOptionPane.showMessageDialog(null, "Task name cannot be empty."); return; }
 
         currentProject.tasks.add(new Task(name, diff, deadline));
+
+        saveCurrentProject();
+
         refreshTasks();
     }
 
@@ -284,6 +292,9 @@ class ProjectTodoPanel extends JPanel {
         t.setName(name);
         t.setDifficulty(diff);
         t.setDeadline(deadline);
+
+        saveCurrentProject();
+
         refreshTasks();
     }
 
@@ -324,6 +335,14 @@ class ProjectTodoPanel extends JPanel {
         progressBar.setString(pct + "% completed");
 
         revalidate(); repaint();
+    }
+
+
+    // Save tasks in the project file
+    public void saveCurrentProject(){
+        if (currentProject != null){
+            pm.saveProject(currentProject);
+        }
     }
 
 }
