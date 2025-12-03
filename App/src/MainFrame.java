@@ -9,6 +9,10 @@ class MainFrame extends JFrame {
 
     MainFrame() {
         super("College Productivity App");
+
+        Image icon = new ImageIcon("App/assets/Logo.png").getImage();
+        setIconImage(icon);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(Frame.MAXIMIZED_BOTH);
         setMinimumSize(new Dimension(1200, 360));
