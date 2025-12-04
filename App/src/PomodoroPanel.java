@@ -23,20 +23,15 @@ class PomodoroPanel extends JPanel {
     private final JTextField longBreakField = new JTextField("15", 3);
     private final JTextField cyclesBeforeLongBreakField = new JTextField("4", 2);
     private final JTextField taskField = new JTextField(15);
-    private final JButton setTaskBtn = new JButton("Set Task");
 
-    private final JButton startBtn = new JButton("Start");
-    private final JButton pauseBtn = new JButton("Pause");
-    private final JButton resetBtn = new JButton("Reset");
     private final JLabel timerLabel = new JLabel("25:00", SwingConstants.CENTER);
     private final JLabel statusLabel = new JLabel("Idle", SwingConstants.CENTER);
     private final JLabel cycleCounterLabel = new JLabel("Cycle: 0/4", SwingConstants.CENTER);
     private final JLabel currentTaskLabel = new JLabel("Current Task: No Active Task", SwingConstants.CENTER);
 
     private final DefaultListModel<String> sessionLog = new DefaultListModel<>();
-    private final JList<String> logList = new JList<>(sessionLog);
 
-    private javax.swing.Timer swingTimer;
+    private final javax.swing.Timer swingTimer;
     private int remainingSeconds = 0;
     private PomodoroState state = PomodoroState.IDLE;
     private int cyclesCompleted = 0;
@@ -63,11 +58,15 @@ class PomodoroPanel extends JPanel {
         controls.add(new JLabel("Task:"));
         taskField.setToolTipText("Enter your current task");
         controls.add(taskField);
+        JButton setTaskBtn = new JButton("Set Task");
         controls.add(setTaskBtn);
 
         controls.add(Box.createHorizontalStrut(15));
+        JButton startBtn = new JButton("Start");
         controls.add(startBtn);
+        JButton pauseBtn = new JButton("Pause");
         controls.add(pauseBtn);
+        JButton resetBtn = new JButton("Reset");
         controls.add(resetBtn);
         controls.add(Box.createHorizontalStrut(15));
         controls.add(new JLabel("Music:"));
@@ -97,6 +96,7 @@ class PomodoroPanel extends JPanel {
         right.setPreferredSize(new Dimension(320, 0));
         right.setBorder(BorderFactory.createTitledBorder("Session Log"));
 
+        JList<String> logList = new JList<>(sessionLog);
         logList.setFont(new Font("Monospaced", Font.PLAIN, 13));
         logList.setBackground(new Color(250, 250, 250));
         JScrollPane logScroll = new JScrollPane(logList);
