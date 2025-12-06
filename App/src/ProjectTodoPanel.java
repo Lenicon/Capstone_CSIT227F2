@@ -1,8 +1,12 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.Date;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Cursor;
 // TODO: ADD DEPENDENCY, WE MIGHT NEED TO LOOK INTO MAVEN
 import com.toedter.calendar.JDateChooser;
 
@@ -32,10 +36,10 @@ class ProjectTodoPanel extends JPanel {
         return new ImageIcon(img);
     }
 
-    private static final ImageIcon ICON_DONE   = loadIcon("check.png", 20, 20);
-    private static final ImageIcon ICON_UNDO   = loadIcon("undo.png", 20, 20);
-    private static final ImageIcon ICON_EDIT   = loadIcon("pencil.png", 20, 20);
-    private static final ImageIcon ICON_DELETE = loadIcon("trash.png", 20, 20);
+    private static final ImageIcon ICON_DONE   = loadIcon("check.png", 24, 24);
+    private static final ImageIcon ICON_UNDO   = loadIcon("undo.png", 24, 24);
+    private static final ImageIcon ICON_EDIT   = loadIcon("pencil.png", 24, 24);
+    private static final ImageIcon ICON_DELETE = loadIcon("trash.png", 24, 24);
 
     ProjectTodoPanel() {
         setLayout(new BorderLayout());
@@ -166,8 +170,27 @@ class ProjectTodoPanel extends JPanel {
 
         for (JButton b : new JButton[]{finish, edit, remove}) {
             b.setFocusPainted(false);
-            b.setBorderPainted(false);
-            b.setContentAreaFilled(false);
+            b.setContentAreaFilled(false);      // no background by default
+            b.setOpaque(false);
+
+            b.setBorder(new LineBorder(Color.GRAY, 1, true));
+            b.setPreferredSize(new Dimension(30, 30));
+            b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    b.setContentAreaFilled(true);
+                    b.setOpaque(true);
+                    b.setBackground(new Color(220, 220, 220)); // hover background
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    b.setContentAreaFilled(false);
+                    b.setOpaque(false);
+                }
+            });
         }
 
         finish.addActionListener(e -> {
