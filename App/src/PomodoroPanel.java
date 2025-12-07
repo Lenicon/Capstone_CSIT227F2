@@ -24,7 +24,7 @@ class PomodoroPanel extends JPanel {
     private final JTextField cyclesBeforeLongBreakField = new JTextField("4", 2);
 //    private final JTextField taskField = new JTextField(15);
 
-    private final JButton startBtn = new JButton("   Start   ");
+    private final JButton startBtn = new JButton("Start");
 
     private final JLabel timerLabel = new JLabel("25:00", SwingConstants.CENTER);
     private final JLabel statusLabel = new JLabel("Idle", SwingConstants.CENTER);
@@ -62,6 +62,10 @@ class PomodoroPanel extends JPanel {
 //        controls.add(taskField);
 //        JButton setTaskBtn = new JButton("Set Task");
 //        controls.add(setTaskBtn);
+
+        Dimension minbtn = new Dimension(70, 26);
+        startBtn.setMinimumSize(minbtn);
+        startBtn.setPreferredSize(minbtn);
 
         controls.add(Box.createHorizontalStrut(15));
         controls.add(startBtn);
@@ -127,7 +131,7 @@ class PomodoroPanel extends JPanel {
 
         resetBtn.addActionListener(e -> {
             resetPomodoro();
-            startBtn.setText("   Start   ");
+            startBtn.setText("Start");
             player.stop();
         });
 
