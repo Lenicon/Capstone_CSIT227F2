@@ -5,7 +5,7 @@ class MainFrame extends JFrame {
     private final ProjectListPanel projectListPanel;
     private final ProjectTodoPanel projectTodoPanel;
     private final PomodoroPanel pomodoroPanel;
-    private final GradesPanel gradesPanel;
+    private final GWACalculator gwaCalculator;
 
     MainFrame() {
         super("College Productivity App");
@@ -22,7 +22,7 @@ class MainFrame extends JFrame {
         // Left: Projects list (shared)
         projectListPanel = new ProjectListPanel(this);
 //        projectListPanel.loadProjects();    // load projects
-
+        gwaCalculator = new GWACalculator();
         // Center: card panel switching between "Projects" view and others
         JTabbedPane tabs = new JTabbedPane();
 
@@ -37,11 +37,10 @@ class MainFrame extends JFrame {
 //        //------------------------------------------
 
         pomodoroPanel = new PomodoroPanel();
-        gradesPanel = new GradesPanel();
-
+// add tabs
         tabs.addTab("Projects", wrapPanels(projectListPanel, projectTodoPanel));
         tabs.addTab("Pomodoro", pomodoroPanel);
-        tabs.addTab("Grades", gradesPanel);
+        tabs.addTab("CIT GWA Calculator", gwaCalculator);
 
         add(tabs, BorderLayout.CENTER);
 
