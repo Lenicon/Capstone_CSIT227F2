@@ -21,6 +21,8 @@ public class ProjectFileHandler {
                     // 2. Deserialize the ENTIRE object (Name, ID, Date, Tasks)
                     Project p = (Project) in.readObject();
                     projects.add(p);
+                } catch (ClassCastException cce) {
+                    // ignore
                 } catch (Exception e) {
                     System.err.println("Failed to load file: " + file.getName());
                     e.printStackTrace(); // Skip corrupted files
