@@ -1,4 +1,6 @@
-# Project Task Manager
+***
+
+# College Productivity App
 ### Capstone | Team 6'7" - CSIT227
 
 ## MEMBERS:
@@ -9,36 +11,72 @@
 - Gidayawan, Jerry
 
 ## Features
-The order of what's inside our window.
-- **Progress Bar** (top) : Updates based on the specific project task completion.
-- **Project Panel**
-  - At the left of Work Panel, below Progress Bar
-  - **Add / Remove Project**
-  - **Project List** : Displays the projects added as buttons.
-- **Work Panel**
-  - At the left of Project Panel
+The application is divided into three main tabs to handle different aspects of student productivity.
 
-### Project Panel
-- You can **Add / Remove Projects**. By clicking add, it opens a dialogue box and asks for the:
-  - **Task Name**
+- **Projects Tab**: Manage tasks and project completion.
+- **Pomodoro Tab**: Focus timer with background music.
+- **CIT GWA Calculator Tab**: Grade tracking and calculation.
 
-### Inside Projects:
-  - ### "Tasks" Tab:
-    - These contains the individual task that each collaborator can have, aswell as
-    - You can **Add Tasks**. By clicking add, it opens a dialogue box and asks for the:
-      - **Task Name**
-      - **Difficulty** (Default: 0) - this metric will dictate how much the task will progress the progress bar
-      - **Deadline** (Default: N/A)
-      - **Confirm** to save the task to the project
-      - Adding a task will write it to a file.
-    - You can **Sort Tasks by Deadline** by clicking the arrow buttons next to the deadline text
-    - You can **Sort Tasks by Difficulty** by clicking the arrow buttons next to the Difficulty text
-    - You can **Prioritize Tasks** by clicking the star next to the task name pushing it to the top of the tasks list. Prioritized tasks are sorted first, then the non-prioritized tasks afterwards.
-    - You can **Complete Tasks**, by clicking checkbox, which will be sent to the **"Completed"** section
-    - You can also **Delete Tasks**, by clicking a button, which will just remove it forever.
-- A **Progress Bar** at the top will update depending which project you're handling.
-  - The progress bar will update everytime a task is added, completed, or deleted.
-  - The progress bar will read the difficulty of the project files and change it's completion rate based on the total amount of tasks and how many of them are completed.
+---
+
+### 1. Projects Tab
+This tab is split into two panels: the **Project List** (Left) and the **Task Manager** (Right).
+
+#### **Project List Panel (Left)**
+- **Persistent Storage**: Projects are automatically saved to your system's AppData folder (`Group67`).
+- **Project Management**:
+  - **Add Project**: Create a new project with a unique name.
+  - **Rename Project**: Update the name of an existing project.
+  - **Remove Project**: Permanently delete a project and its associated data file.
+- **Selection**: Clicking a project loads its tasks into the right panel.
+
+#### **Task Manager Panel (Right)**
+- **Progress Bar**: Located at the top. Visualizes the completion percentage of the current project based on finished vs. total tasks.
+- **Sorting Options**: A dropdown menu allows you to sort tasks by:
+  - **Deadline** (Default)
+  - **Difficulty** (Low to High)
+  - **Name** (A-Z)
+- **Task Categorization**:
+  - **Unfinished Tab**: Active tasks waiting to be completed.
+  - **Finished Tab**: Completed tasks are moved here automatically to keep the workspace clean.
+- **Task Actions**:
+  - **Add Task**: Opens a dialog requesting:
+    - **Task Name**
+    - **Deadline** (Date picker included)
+    - **Difficulty** (0 to 3 stars)
+  - **Edit Task** (Pencil Icon): Modify the name, deadline, or difficulty of an existing task.
+  - **Complete/Undo** (Check/Undo Icon): Toggles the task state. Completed tasks move to the "Finished" tab; undoing them moves them back to "Unfinished".
+  - **Delete Task** (Trash Icon): Permanently removes the task.
+
+---
+
+### 2. Pomodoro Tab
+A focus timer designed to help students manage study sessions using the Pomodoro technique.
+
+- **Customizable Timer Settings**: Input fields to define durations for:
+  - **Work Session** (Default: 25 min)
+  - **Short Break** (Default: 5 min)
+  - **Long Break** (Default: 15 min)
+  - **Cycles** (Number of work sessions before a long break).
+- **Background Music (BGM)**:
+  - Includes preset tracks (Mondstadt, Liyue, Inazuma, Sumeru, Fontaine).
+  - **Custom Music**: Allows the user to select their own `.mp3` file from their computer.
+  - **Auto-Play**: Music plays automatically during Work sessions and stops during breaks or when paused.
+- **State Tracking**: Displays the current status (WORK, SHORT BREAK, LONG BREAK, IDLE, PAUSED) and the current cycle count (e.g., Cycle: 1/4).
+
+---
+
+### 3. CIT GWA Calculator Tab
+A tool specifically designed to calculate the General Weighted Average based on units and grades in the way the Cebu Institute of Technology does it.
+
+- **Subject Management**:
+  - **Add Subject**: Input the Subject Name, Units (e.g., 3.0), and Grade (1.0 - 5.0).
+  - **Edit Subject**: Modify details of selected subjects.
+  - **Remove Subject**: Delete a subject from the list.
+- **Automatic Persistence**: Subject data is saved to a binary file (`subjects.dat`) so you don't lose your grades upon closing the app.
+- **Calculation Display**:
+  - Calculates the final GWA rounded to two decimal places.
+  - Displays the result
 
 
 
