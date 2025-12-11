@@ -23,7 +23,6 @@ The application is divided into three main tabs to handle different aspects of s
 This tab is split into two panels: the **Project List** (Left) and the **Task Manager** (Right).
 
 #### **Project List Panel (Left)**
-- **Persistent Storage**: Projects are automatically saved to your system's AppData folder (`Group67`).
 - **Project Management**:
   - **Add Project**: Create a new project with a unique name.
   - **Rename Project**: Update the name of an existing project.
@@ -73,10 +72,12 @@ A tool specifically designed to calculate the General Weighted Average based on 
   - **Add Subject**: Input the Subject Name, Units (e.g., 3.0), and Grade (1.0 - 5.0).
   - **Edit Subject**: Modify details of selected subjects.
   - **Remove Subject**: Delete a subject from the list.
-- **Automatic Persistence**: Subject data is saved to a binary file (`subjects.dat`) so you don't lose your grades upon closing the app.
 - **Calculation Display**:
   - Calculates the final GWA rounded to two decimal places.
   - Displays the result
+
+### FILE HANDLING
+All progress is automatically saved locally.
 
 
 
