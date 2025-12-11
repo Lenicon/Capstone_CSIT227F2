@@ -130,10 +130,12 @@ class PomodoroPanel extends JPanel implements Serializable {
 
         startBtn.setPreferredSize(new Dimension(100, 40));
         startBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+        startBtn.setFocusable(false);
         bottomPanel.add(startBtn);
 
         resetBtn.setPreferredSize(new Dimension(100, 40));
         resetBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+        resetBtn.setFocusable(false);
         bottomPanel.add(resetBtn);
 
         bottomPanel.add(new JLabel("Music:"));
