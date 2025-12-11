@@ -55,7 +55,7 @@ class PomodoroPanel extends JPanel implements Serializable {
 
     private final JLabel timerLabel = new JLabel("25:00", SwingConstants.CENTER);
     private final JLabel statusLabel = new JLabel("Idle", SwingConstants.CENTER);
-    private final JLabel cycleCounterLabel = new JLabel("Cycle: 0/4", SwingConstants.CENTER);
+    private final JLabel cycleCounterLabel = new JLabel("", SwingConstants.CENTER);
 
     private final javax.swing.Timer swingTimer;
     private int remainingSeconds = 0;
@@ -69,6 +69,8 @@ class PomodoroPanel extends JPanel implements Serializable {
     PomodoroPanel() {
         // --- 1. Load settings immediately on startup ---
         loadSettings();
+
+        updateCycleLabel();
 
         setLayout(new BorderLayout(10, 10));
         setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -449,7 +451,7 @@ class PomodoroPanel extends JPanel implements Serializable {
 
     private void updateCycleLabel() {
         int target = parseIntOrDefault(cyclesBeforeLongBreakField.getText().trim(), 4);
-        cycleCounterLabel.setText("Cycle: " + cyclesCompleted + "/" + target);
+        cycleCounterLabel.setText("Cycle: " + ((cyclesCompleted%target)+1) + "/" + target + " - Completed: "+cyclesCompleted);
     }
 
     private String getTimeStamp() {
