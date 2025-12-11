@@ -7,6 +7,8 @@ public class BGM_Pomodoro {
     private boolean loop = false;
 
     public void play(String filePath, boolean loopMusic) {
+        if (filePath == "") return;
+
         loop = loopMusic;
         if (isPlaying) return;
 
