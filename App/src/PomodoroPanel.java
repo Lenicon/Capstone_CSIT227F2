@@ -101,7 +101,7 @@ class PomodoroPanel extends JPanel {
         add(center, BorderLayout.CENTER);
 
         // Right Panel (Log)
-        JPanel right = new JPanel(new BorderLayout(0, 5));
+//        JPanel right = new JPanel(new BorderLayout(0, 5));
 //        right.setPreferredSize(new Dimension(320, 0));
 //        right.setBorder(BorderFactory.createTitledBorder("Session Log"));
 
@@ -218,7 +218,15 @@ class PomodoroPanel extends JPanel {
             startBtn.setText("Pause");
             swingTimer.start();
             state = previousStateBeforePause != null ? previousStateBeforePause : PomodoroState.WORK;
-            statusLabel.setText(state == PomodoroState.WORK ? "WORK" : "BREAK");
+            if (state == PomodoroState.WORK) {
+                statusLabel.setText("WORK");
+            } else if (state == PomodoroState.SHORT_BREAK){
+
+                statusLabel.setText("Short Break");
+            } else {
+
+                statusLabel.setText("Long Break");
+            }
             previousStateBeforePause = null;
         } else {
             startBtn.setText("Resume");
