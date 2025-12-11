@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class PomodoroPanel extends JPanel {
+
     private final BGM_Pomodoro player = new BGM_Pomodoro();
     private final String[] songs = {"Mondstadt", "Liyue", "Inazuma", "Sumeru", "Fontaine", "Custom..."};
     private final String[] songFiles = {
@@ -22,13 +23,18 @@ class PomodoroPanel extends JPanel {
     private final JTextField shortBreakField = new JTextField("5", 3);
     private final JTextField longBreakField = new JTextField("15", 3);
     private final JTextField cyclesBeforeLongBreakField = new JTextField("4", 2);
+
 //    private final JTextField taskField = new JTextField(15);
 
     private final JButton startBtn = new JButton("Start");
+    private final JButton resetBtn = new JButton("Reset");
+
+//        JButton pauseBtn = new JButton("Pause");
 
     private final JLabel timerLabel = new JLabel("25:00", SwingConstants.CENTER);
     private final JLabel statusLabel = new JLabel("Idle", SwingConstants.CENTER);
     private final JLabel cycleCounterLabel = new JLabel("Cycle: 0/4", SwingConstants.CENTER);
+
 //    private final JLabel currentTaskLabel = new JLabel("Current Task: No Active Task", SwingConstants.CENTER);
 
 //    private final DefaultListModel<String> sessionLog = new DefaultListModel<>();
@@ -39,67 +45,65 @@ class PomodoroPanel extends JPanel {
     private int cyclesCompleted = 0;
     private PomodoroState previousStateBeforePause = null;
 
-//    private String currentTask = "No Active Task";
+    //    private String currentTask = "No Active Task";
     private Date workStartTime;
 
     enum PomodoroState { IDLE, WORK, SHORT_BREAK, LONG_BREAK, PAUSED }
 
     PomodoroPanel() {
         setLayout(new BorderLayout(10, 10));
-        setBorder(new EmptyBorder(15, 15, 15, 15));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
+        setBackground(Color.decode("#f5f5f5"));
 
-        JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        // Top Settings Panel
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        controls.setOpaque(false);
+
         controls.add(new JLabel("Work (min):"));
+        workField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         controls.add(workField);
+
         controls.add(new JLabel("Short (min):"));
+        shortBreakField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         controls.add(shortBreakField);
+
         controls.add(new JLabel("Long (min):"));
+        longBreakField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         controls.add(longBreakField);
-        controls.add(new JLabel("Cycles for Long:"));
+
+        controls.add(new JLabel("Cycles:"));
+        cyclesBeforeLongBreakField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         controls.add(cyclesBeforeLongBreakField);
+
 //        controls.add(new JLabel("Task:"));
 //        taskField.setToolTipText("Enter your current task");
 //        controls.add(taskField);
 //        JButton setTaskBtn = new JButton("Set Task");
 //        controls.add(setTaskBtn);
 
-        Dimension minbtn = new Dimension(70, 26);
-        startBtn.setMinimumSize(minbtn);
-        startBtn.setPreferredSize(minbtn);
-
-        controls.add(Box.createHorizontalStrut(15));
-        controls.add(startBtn);
-//        JButton pauseBtn = new JButton("Pause");
-//        controls.add(pauseBtn);
-        JButton resetBtn = new JButton("Reset");
-        controls.add(resetBtn);
-        controls.add(Box.createHorizontalStrut(15));
-        controls.add(new JLabel("Music:"));
-        controls.add(songSelector);
-
         add(controls, BorderLayout.NORTH);
 
-        timerLabel.setFont(new Font("Monospaced", Font.BOLD, 64));
+        // Center Timer Panel
+        JPanel center = new JPanel(new GridLayout(3, 1));
+        center.setOpaque(false);
+
+        timerLabel.setFont(new Font("Monospaced", Font.BOLD, 90));
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
-        cycleCounterLabel.setFont(new Font("SansSerif", Font.PLAIN, 25));
-        cycleCounterLabel.setForeground(new Color(80, 80, 80));
+        cycleCounterLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
 //        currentTaskLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-
-        JPanel center = new JPanel(new BorderLayout(0, 15));
-        center.add(timerLabel, BorderLayout.CENTER);
-
-        JPanel southInfo = new JPanel(new BorderLayout());
-        southInfo.add(statusLabel, BorderLayout.CENTER);
-        southInfo.add(cycleCounterLabel, BorderLayout.SOUTH);
-        center.add(southInfo, BorderLayout.SOUTH);
-
 //        center.add(currentTaskLabel, BorderLayout.NORTH);
+
+        center.add(statusLabel);
+        center.add(timerLabel);
+        center.add(cycleCounterLabel);
 
         add(center, BorderLayout.CENTER);
 
+        // Right Panel (Log)
         JPanel right = new JPanel(new BorderLayout(0, 5));
-        right.setPreferredSize(new Dimension(320, 0));
-        right.setBorder(BorderFactory.createTitledBorder("Session Log"));
+//        right.setPreferredSize(new Dimension(320, 0));
+//        right.setBorder(BorderFactory.createTitledBorder("Session Log"));
 
 //        JList<String> logList = new JList<>(sessionLog);
 //        logList.setFont(new Font("Monospaced", Font.PLAIN, 13));
@@ -110,30 +114,39 @@ class PomodoroPanel extends JPanel {
 //        right.add(logScroll, BorderLayout.CENTER);
 //        add(right, BorderLayout.EAST);
 
+        // Bottom Button Panel
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        bottomPanel.setOpaque(false);
+
+        startBtn.setPreferredSize(new Dimension(100, 40));
+        startBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+        bottomPanel.add(startBtn);
+
+//        controls.add(pauseBtn);
+
+        resetBtn.setPreferredSize(new Dimension(100, 40));
+        resetBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+        bottomPanel.add(resetBtn);
+
+        bottomPanel.add(new JLabel("Music:"));
+        bottomPanel.add(songSelector);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Listeners
         startBtn.addActionListener(e -> {
             if (state == PomodoroState.IDLE){
                 startPomodoro();
-                startBtn.setText("Pause");
             } else{
                 pausePomodoro();
-                if (state == PomodoroState.PAUSED) {
-                    player.stop();
-                } else if (previousStateBeforePause == PomodoroState.WORK) {
-                    player.play(currentSongPath, true);
-                }
             }
-
         });
 
 //        pauseBtn.addActionListener(e -> {
 //
 //        });
 
-        resetBtn.addActionListener(e -> {
-            resetPomodoro();
-            startBtn.setText("Start");
-            player.stop();
-        });
+        resetBtn.addActionListener(e -> resetPomodoro());
 
         songSelector.addActionListener(e -> {
             int index = songSelector.getSelectedIndex();
@@ -148,6 +161,10 @@ class PomodoroPanel extends JPanel {
                 }
             } else {
                 currentSongPath = songFiles[index];
+            }
+            if (state == PomodoroState.WORK && !startBtn.getText().equals("Resume")) {
+                player.stop();
+                player.play(currentSongPath, true);
             }
         });
 
@@ -169,35 +186,46 @@ class PomodoroPanel extends JPanel {
         if (state == PomodoroState.PAUSED) {
             swingTimer.start();
 //            state = previousStateBeforePause != null ? previousStateBeforePause : PomodoroState.WORK;
-            statusLabel.setText("WORK");
-            updateCycleLabel();
+            state = previousStateBeforePause != null ? previousStateBeforePause : PomodoroState.WORK;
+
+            if (state == PomodoroState.WORK) {
+                statusLabel.setText("WORK");
+                player.play(currentSongPath, true);
+            }
+            startBtn.setText("Pause");
             return;
         }
+
         if (state == PomodoroState.IDLE) {
             int workMin = parseIntOrDefault(workField.getText().trim(), 25);
             remainingSeconds = workMin * 60;
             state = PomodoroState.WORK;
             statusLabel.setText("WORK");
+            statusLabel.setForeground(new Color(34, 139, 34));
+
             updateCycleLabel();
             swingTimer.start();
             workStartTime = new Date();
             player.play(currentSongPath, true);
+            startBtn.setText("Pause");
         }
     }
 
     private void pausePomodoro() {
         if (state == PomodoroState.IDLE) return;
+
         if (state == PomodoroState.PAUSED) {
             startBtn.setText("Pause");
             swingTimer.start();
             state = previousStateBeforePause != null ? previousStateBeforePause : PomodoroState.WORK;
-            statusLabel.setText("WORK");
+            statusLabel.setText(state == PomodoroState.WORK ? "WORK" : "BREAK");
             previousStateBeforePause = null;
         } else {
-            startBtn.setText("Play");
+            startBtn.setText("Resume");
             previousStateBeforePause = state;
             state = PomodoroState.PAUSED;
             swingTimer.stop();
+            player.stop();
             statusLabel.setText("Paused");
         }
         updateCycleLabel();
@@ -205,12 +233,16 @@ class PomodoroPanel extends JPanel {
 
     private void resetPomodoro() {
         swingTimer.stop();
+        player.stop();
         state = PomodoroState.IDLE;
         remainingSeconds = 0;
         cyclesCompleted = 0;
         statusLabel.setText("Idle");
+        statusLabel.setForeground(Color.BLACK);
         updateCycleLabel();
-        timerLabel.setText(formatSec( parseIntOrDefault(workField.getText().trim(),25) * 60 ));
+        timerLabel.setText(formatSec(parseIntOrDefault(workField.getText().trim(), 25) * 60));
+        startBtn.setText("Start");
+
 //        sessionLog.clear();
 //        currentTask = "No Active Task";
 //        currentTaskLabel.setText("Current Task: No Active Task");
@@ -221,10 +253,6 @@ class PomodoroPanel extends JPanel {
         if (remainingSeconds > 0) {
             remainingSeconds--;
             updateTimerDisplay();
-            if (remainingSeconds == 0) {
-                swingTimer.stop();
-                handlePeriodEnd();
-            }
         } else {
             swingTimer.stop();
             handlePeriodEnd();
@@ -232,56 +260,54 @@ class PomodoroPanel extends JPanel {
     }
 
     private void handlePeriodEnd() {
-        switch (state) {
-            case WORK -> {
-                cyclesCompleted++;
-                int target = parseIntOrDefault(cyclesBeforeLongBreakField.getText().trim(), 4);
+        player.stop();
 
-                Date workEndTime = new Date();
-                long durationMillis = workEndTime.getTime() - workStartTime.getTime();
-                long minutes = durationMillis / 60000;
-                long seconds = (durationMillis % 60000) / 1000;
-                String durationStr = String.format("%02d:%02d", minutes, seconds);
+        if (state == PomodoroState.WORK) {
+            cyclesCompleted++;
+            int target = parseIntOrDefault(cyclesBeforeLongBreakField.getText().trim(), 4);
 
 //                String logEntry = durationStr + " - " + currentTask;
 //                sessionLog.addElement(logEntry);
 //                sessionLog.addElement("  Completed cycle " + cyclesCompleted + " of " + target);
 
-                if (cyclesCompleted % target == 0) {
-                    int longMin = parseIntOrDefault(longBreakField.getText().trim(), 15);
-                    remainingSeconds = longMin * 60;
-                    state = PomodoroState.LONG_BREAK;
-                    statusLabel.setText("Long Break Started");
-                } else {
-                    int shortMin = parseIntOrDefault(shortBreakField.getText().trim(), 5);
-                    remainingSeconds = shortMin * 60;
-                    state = PomodoroState.SHORT_BREAK;
-                    statusLabel.setText("Short Break Started");
-                }
-                swingTimer.start();
-                updateCycleLabel();
+            if (cyclesCompleted % target == 0) {
+                int longMin = parseIntOrDefault(longBreakField.getText().trim(), 15);
+                remainingSeconds = longMin * 60;
+                state = PomodoroState.LONG_BREAK;
+                statusLabel.setText("Long Break");
+                statusLabel.setForeground(Color.BLUE);
+            } else {
+                int shortMin = parseIntOrDefault(shortBreakField.getText().trim(), 5);
+                remainingSeconds = shortMin * 60;
+                state = PomodoroState.SHORT_BREAK;
+                statusLabel.setText("Short Break");
+                statusLabel.setForeground(Color.BLUE);
             }
-            case SHORT_BREAK, LONG_BREAK -> {
-                int workMin = parseIntOrDefault(workField.getText().trim(), 25);
-                remainingSeconds = workMin * 60;
-                state = PomodoroState.WORK;
-                statusLabel.setText("Work Session");
-                swingTimer.start();
-                workStartTime = new Date();
-                updateCycleLabel();
-                player.play(currentSongPath, true);
-            }
-            default -> {
-                state = PomodoroState.IDLE;
-                statusLabel.setText("Idle");
-                updateCycleLabel();
-            }
+            swingTimer.start();
+            updateCycleLabel();
+        }
+        else if (state == PomodoroState.SHORT_BREAK || state == PomodoroState.LONG_BREAK) {
+            int workMin = parseIntOrDefault(workField.getText().trim(), 25);
+            remainingSeconds = workMin * 60;
+            state = PomodoroState.WORK;
+            statusLabel.setText("WORK");
+            statusLabel.setForeground(new Color(34, 139, 34));
+
+            swingTimer.start();
+            workStartTime = new Date();
+            updateCycleLabel();
+            player.play(currentSongPath, true);
+        }
+        else {
+            state = PomodoroState.IDLE;
+            statusLabel.setText("Idle");
+            updateCycleLabel();
         }
         updateTimerDisplay();
     }
 
     private void updateTimerDisplay() {
-        timerLabel.setText(formatSec(remainingSeconds == 0 ? parseIntOrDefault(workField.getText().trim(),25) * 60 : remainingSeconds));
+        timerLabel.setText(formatSec(remainingSeconds));
     }
 
     private void updateCycleLabel() {
@@ -294,7 +320,7 @@ class PomodoroPanel extends JPanel {
     }
 
     private static int parseIntOrDefault(String s, int def) {
-        try { return Integer.parseInt(s); } catch (Exception e) { return def; }
+        try { return Integer.parseInt(s.trim()); } catch (Exception e) { return def; }
     }
 
     private static String formatSec(int sec) {
